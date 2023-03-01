@@ -17,12 +17,12 @@ const firebaseConfig = {
     projectId: Constants.manifest?.extra?.firebaseProjectId,
     storageBucket: Constants.manifest?.extra?.firebaseStorageBucket,
     messagingSenderId: Constants.manifest?.extra?.firebaseMessagingSenderId,
+    databaseURL: "https://ucoach-mobile-default-rtdb.firebaseio.com",
     appId: Constants.manifest?.extra?.firebaseAppId,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+export const db = getDatabase(app);
 
-export { db };
 const analytics = getAnalytics(app);
