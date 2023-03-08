@@ -20,8 +20,8 @@ export default function HomeScreen({navigation}) {
       <Text>Welcome {user?.email}!</Text>
       
       <Button
-          title="Add an Item"
-          onPress={() => navigation.navigate('AddItem')}
+          title="Survey"
+          onPress={() => navigation.navigate('Survey')}
         />
       <Button
           title="List of Items"
