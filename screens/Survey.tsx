@@ -17,6 +17,8 @@ export default function App({navigation}) {
   const [goalTime, setGoalTime] = useState('');
   const [longRun, setLongRun] = useState('');
   const [doubles, setDoubles] = useState('');
+  const [goalDate, setGoalDate] = useState('');
+  const [health, setHealth] = useState('');
   //const [username, setName] = useState(''); 
   const [email, setEmail] = useState('');
   const radioButtonsData = [{
@@ -157,12 +159,14 @@ export default function App({navigation}) {
       goalEvent: goalEvent,
       athleteType: athleteType,
       goalTime: goalTime,
-      longRun: parseInt(longRun, 10),
-      doubles: parseInt(doubles, 10),
+      longRun: longRun, //parseInt(longRun, 10),
+      doubles: doubles, //parseInt(doubles, 10),
       distance1: distance1,
       distance2: distance2,
       distance3: distance3,
-      distance4: distance4
+      distance4: distance4,
+      goalDate: goalDate,
+      health: health
     }).then(() => {
       // Data saved successfully!
       alert('data updated!');    
@@ -211,12 +215,18 @@ export default function App({navigation}) {
   return (
     <View style={styles.container}>
       
+      <Text>On a scale of 0-100, what percent health are you at(Are you injured)? </Text>
+      <TextInput value={health} onChangeText={(health) => {setHealth(health)}} placeholder="Health Percentage" style={styles.textBoxes}></TextInput>
+
       <Text>Please choose your main event(800m, 1600m or 3200m):</Text>
       <TextInput value={goalEvent} onChangeText={(goalEvent) => {setGoalEvent(goalEvent)}} placeholder="Goal Event" style={styles.textBoxes}></TextInput>
       
       <Text>What is your goal time for {goalEvent} within the next 2 weeks:</Text>
       <TextInput value={goalTime} onChangeText={(goalTime) => {setGoalTime(goalTime)}} placeholder="Goal Time" style={styles.textBoxes}></TextInput>
       
+      <Text>What is the date of your last/most important race this season(MM/DD/YYYY format):</Text>
+      <TextInput value={goalDate} onChangeText={(goalDate) => {setGoalDate(goalDate)}} placeholder="Goal Date(MM/DD/YYYY)" style={styles.textBoxes}></TextInput>
+
       <Text>Please choose a training program:</Text>
       <TextInput value={trainingType} onChangeText={(trainingType) => {setTrainingType(trainingType)}} placeholder="Speed, Strength, or Specialist" style={styles.textBoxes}></TextInput>
 
@@ -227,7 +237,8 @@ export default function App({navigation}) {
       <TextInput value={doubles} onChangeText={(doubles) => {setDoubles(doubles)}} placeholder="Number of doubles" style={styles.textBoxes}></TextInput>
 
 
-      <button onClick={createData}>Submit Data </button>  
+       
+      <Button title="Submit Data" buttonStyle={styles.control} onPress={createData} />
       
       <Button
           title="Continue Survey"

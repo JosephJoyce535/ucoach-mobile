@@ -4,8 +4,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from '../screens/Home';
 import Survey from '../screens/Survey';
-import List from '../screens/List';
+import Data from '../screens/Data';
 import Survey2 from '../screens/Survey2'
+import Calendar from '../screens/Calendar'
 
 const Stack = createStackNavigator();
 
@@ -15,8 +16,9 @@ export default function UserStack() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Survey" component={Survey} />
-        <Stack.Screen name="List" component={List} />
+        <Stack.Screen name="Data" component={Data} />
         <Stack.Screen name="Survey2" component={Survey2} />
+        <Stack.Screen name="Calendar" component={Calendar} />
       </Stack.Navigator>
     </NavigationContainer>
   );

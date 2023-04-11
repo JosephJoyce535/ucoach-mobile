@@ -24,9 +24,14 @@ export default function HomeScreen({navigation}) {
           onPress={() => navigation.navigate('Survey')}
         />
       <Button
-          title="List of Items"
+          title="Data"
           color="green"
-          onPress={() => navigation.navigate('List')}
+          onPress={() => navigation.navigate('Data')}
+      />
+      <Button
+          title="Workout Calendar"
+          color="green"
+          onPress={() => navigation.navigate('Calendar')}
       />
 
       <Button title="Sign Out" style={styles.button} onPress={() => signOut(auth)} />
