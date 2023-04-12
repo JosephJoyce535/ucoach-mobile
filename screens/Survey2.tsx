@@ -49,8 +49,6 @@ export default function App({navigation}) {
         goalEvent: data.goalEvent,
         athleteType: data.athleteType,
         goalTime: data.goalTime,
-        longRun: parseInt(data.longRun, 10),
-        doubles: parseInt(data.doubles, 10),
         distance1: data.distance1,
         distance2: data.distance2,
         distance3: data.distance3,
@@ -61,7 +59,6 @@ export default function App({navigation}) {
         time4: time4, 
         mileage: mileage,
         goalDate: data.goalDate,
-        health: data.health
       })
     });
   }
@@ -93,6 +90,11 @@ export default function App({navigation}) {
       <Text>{trainingDistance4}:</Text>
       <TextInput value={time4} onChangeText={(time4) => {setTime4(time4)}} placeholder="" style={styles.textBoxes}></TextInput>
       <Button title="Submit Data" buttonStyle={styles.control} onPress={submitData} />
+
+      <Button
+          title="Go Home"
+          onPress={() => navigation.navigate('Home')}
+      />
 
     </View>
   );  

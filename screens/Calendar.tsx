@@ -15,10 +15,7 @@ export default function Calendar() {
   const [goalEvent, setGoalEvent] = useState('');
   const [goalTime, setGoalTime] = useState('');
   const [goalDate, setGoalDate] = useState('');
-  const [longRun, setLongRun] = useState('');
-  const [doubles, setDoubles] = useState('');
   const [mileage, setMileage] = useState('');
-  const [health, setHealth] = useState('');
   const [trainingDistance1, setDistance1] = useState('');
   const [trainingDistance2, setDistance2] = useState('');
   const [trainingDistance3, setDistance3] = useState('');
@@ -28,7 +25,6 @@ export default function Calendar() {
   const [time3, setTime3] = useState('');
   const [time4, setTime4] = useState('');
   
-  //var longMileage = '';
   const [day1Mileage, setDay1] = useState('');
   const [day1Type, setDay1Type] = useState('');
   const [day1Date, setDay1Date] = useState('');
@@ -109,7 +105,7 @@ export default function Calendar() {
             let subTime = (1000*60*60*24) * i;
             //const event = new Date();
             var date = new Date().getTime() + subTime;
-            console.log("Date: " + date)
+            //console.log("Date: " + date)
             const event = new Date(date)
             if (i == 13) setDay14Date(dateClean(event))
             if (i == 12) setDay13Date(dateClean(event))
@@ -127,7 +123,6 @@ export default function Calendar() {
             if (i == 0) setDay1Date(dateClean(event))
         }
       }
-      
         setDay1("Already");
         setDay1Type("Completed")
         setDay2("Already");
@@ -180,7 +175,6 @@ export default function Calendar() {
         else {
             mileTwoWO();
         }
-        //setLongMileage(Math.floor(parseInt(data.mileage, 10) * 0.22));
       } 
       //3200m runners
       else {
@@ -199,10 +193,7 @@ export default function Calendar() {
 
       setGoalEvent(data.goalEvent);
       setGoalTime(data.goalTime);
-      setLongRun(data.longRun);
-      setDoubles(data.doubles);
       setMileage(data.mileage);
-      setHealth(data.health);
       setDistance1(data.distance1);
       setDistance2(data.distance2);
       setDistance3(data.distance3);
@@ -422,61 +413,327 @@ export default function Calendar() {
     onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
         for (let i=13; i>=0; i--) {
+            const rndInt = (Math.floor(Math.random() * 21) + 80) * 0.01
+            console.log(rndInt)
             if (i == 0) {
-                setDay14((Math.floor(parseInt(data.mileage, 10) * 0.15)) + " miles");
+                setDay14((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
                 setDay14Type("Long Race Pace Reps")
             }
             else if (i == 1) {
-                setDay13((Math.floor(parseInt(data.mileage, 10) * 0.15)) + " miles");
+                setDay13((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
                 setDay13Type("Recovery Run")
             }
             else if (i == 2 ) {
-                setDay12((Math.floor(parseInt(data.mileage, 10) * 0.1)) + " miles");
+                setDay12((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
                 setDay12Type("Speed Workout")
             }
             else if (i == 3) {
-                setDay11((Math.floor(parseInt(data.mileage, 10) * 0.15)) + " miles");
+                setDay11((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
                 setDay11Type("Recovery Run")
             }
             else if (i == 4) {
-                setDay10((Math.floor(parseInt(data.mileage, 10) * 0.2)) + " miles");
+                setDay10((Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)) + " miles");
                 setDay10Type("Threshold Workout")
             }
             else if (i == 5) {
-                setDay9((Math.floor(parseInt(data.mileage, 10) * 0.1)) + " miles");
+                setDay9((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
                 setDay9Type("Easy Run + Short Speed")
             }
             else if (i == 6) {
-                setDay8((Math.floor(parseInt(data.mileage, 10) * 0.15)) + " miles");
+                setDay8((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
                 setDay8Type("Recovery Run")
             }
             else if (i == 7) {
-                setDay7((Math.floor(parseInt(data.mileage, 10) * 0.15)) + " miles");
+                setDay7((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
                 setDay7Type("Short Race Pace Reps")
             }
             else if (i == 8) {
-                setDay6((Math.floor(parseInt(data.mileage, 10) * 0.1)) + " miles");
+                setDay6((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
                 setDay6Type("Premeet Workout")
             }
             else if (i == 9) {
-                setDay5((Math.floor(parseInt(data.mileage, 10) * 0.15)) + " miles");
+                setDay5((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
                 setDay5Type("Light Tempo + Hills or Fartlek")
             }
             else if (i == 10) {
-                setDay4((Math.floor(parseInt(data.mileage, 10) * 0.15)) + " miles");
+                setDay4((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
                 setDay4Type("Recovery Run")
             }
             else if (i == 11) {
-                setDay3((Math.floor(parseInt(data.mileage, 10) * 0.2)) + " miles");
+                setDay3((Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)) + " miles");
                 setDay3Type("V02 Max Workout")
             } 
             else if (i == 12) {
-                setDay2((Math.floor(parseInt(data.mileage, 10) * 0.1)) + " miles");
+                setDay2((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
                 setDay2Type("Easy Run + Short Speed")
             }
             else if (i == 13) {
-                setDay1((Math.floor(parseInt(data.mileage, 10) * 0.15)) + " miles");
+                setDay1((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
                 setDay1Type("Recovery Run")
+            }
+        }
+    });
+  }
+  function mileThreeWO() {
+    const username = user?.email.split('@')[0];
+    const starCountRef = ref(db, 'users/' + username);
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        for (let i=13; i>=0; i--) {
+            const rndInt = (Math.floor(Math.random() * 21) + 80) * 0.01
+            if (i == 0) {
+                setDay14((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay14Type("Long Race Pace Reps")
+            }
+            else if (i == 1) {
+                setDay13((Math.ceil(parseInt(data.mileage, 10) * 0.10 * rndInt)) + " miles");
+                setDay13Type("Premeet")
+            }
+            else if (i == 2 ) {
+                setDay12((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
+                setDay12Type("Tuneup workout")
+            }
+            else if (i == 3) {
+                setDay11((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
+                setDay11Type("Recovery Run")
+            }
+            else if (i == 4) {
+                setDay10((Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)) + " miles");
+                setDay10Type("V02 Max workout")
+            }
+            else if (i == 5) {
+                setDay9((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay9Type("Easy Run + Short Speed")
+            }
+            else if (i == 6) {
+                setDay8((Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)) + " miles");
+                setDay8Type("Long Run")
+            }
+            else if (i == 7) {
+                setDay7((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay7Type("Easy Run")
+            }
+            else if (i == 8) {
+                setDay6((Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)) + " miles");
+                setDay6Type("Short Tempo + Race Pace")
+            }
+            else if (i == 9) {
+                setDay5((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay5Type("Easy + strides")
+            }
+            else if (i == 10) {
+                setDay4((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay4Type("Recovery Run")
+            }
+            else if (i == 11) {
+                setDay3((Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)) + " miles");
+                setDay3Type("Tempo + Hills/Short Reps")
+            } 
+            else if (i == 12) {
+                setDay2((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay2Type("Easy Run + Short Speed")
+            }
+            else if (i == 13) {
+                setDay1((Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)) + " miles");
+                setDay1Type("Long Run")
+            }
+        }
+    });
+  }
+  function mileTwoWO() {
+    const username = user?.email.split('@')[0];
+    const starCountRef = ref(db, 'users/' + username);
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        for (let i=13; i>=0; i--) {
+            const rndInt = (Math.floor(Math.random() * 21) + 80) * 0.01
+            if (i == 0) {
+                setDay14((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay14Type("Easy Run")
+            }
+            else if (i == 1) {
+                setDay13((Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)) + " miles");
+                setDay13Type("Short Tempo + Race Pace")
+            }
+            else if (i == 2 ) {
+                setDay12((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay12Type("Easy + strides")
+            }
+            else if (i == 3) {
+                setDay11((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay11Type("Recovery Run")
+            }
+            else if (i == 4) {
+                setDay10((Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)) + " miles");
+                setDay10Type("Tempo + Hills/Short Reps")
+            }
+            else if (i == 5) {
+                setDay9((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay9Type("Easy Run + Short Speed")
+            }
+            else if (i == 6) {
+                setDay8((Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)) + " miles");
+                setDay8Type("Long Run")
+            }
+            else if (i == 7) {
+                setDay7((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay7Type("Easy Run")
+            }
+            else if (i == 8) {
+                setDay6((Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)) + " miles");
+                setDay6Type("Short Tempo + Race Pace")
+            }
+            else if (i == 9) {
+                setDay5((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay5Type("Easy + strides")
+            }
+            else if (i == 10) {
+                setDay4((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay4Type("Recovery Run")
+            }
+            else if (i == 11) {
+                setDay3((Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)) + " miles");
+                setDay3Type("Tempo + Hills/Short Reps")
+            } 
+            else if (i == 12) {
+                setDay2((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay2Type("Easy Run + Short Speed")
+            }
+            else if (i == 13) {
+                setDay1((Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)) + " miles");
+                setDay1Type("Long Run")
+            }
+        }
+    });
+  }
+  function twoMileThreeWO() {
+    const username = user?.email.split('@')[0];
+    const starCountRef = ref(db, 'users/' + username);
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        for (let i=13; i>=0; i--) {
+            const rndInt = (Math.floor(Math.random() * 21) + 80) * 0.01
+            if (i == 0) {
+                setDay14((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay14Type("Long Race Pace Reps")
+            }
+            else if (i == 1) {
+                setDay13((Math.ceil(parseInt(data.mileage, 10) * 0.10 * rndInt)) + " miles");
+                setDay13Type("Premeet")
+            }
+            else if (i == 2 ) {
+                setDay12((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
+                setDay12Type("Tuneup workout")
+            }
+            else if (i == 3) {
+                setDay11((Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)) + " miles");
+                setDay11Type("Recovery Run")
+            }
+            else if (i == 4) {
+                setDay10((Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)) + " miles");
+                setDay10Type("V02 Max workout")
+            }
+            else if (i == 5) {
+                setDay9((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay9Type("Easy Run + Short Speed")
+            }
+            else if (i == 6) {
+                setDay8((Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)) + " miles");
+                setDay8Type("Long Run")
+            }
+            else if (i == 7) {
+                setDay7((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay7Type("Easy Run")
+            }
+            else if (i == 8) {
+                setDay6((Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)) + " miles");
+                setDay6Type("Short Tempo + Race Pace")
+            }
+            else if (i == 9) {
+                setDay5((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay5Type("Easy + strides")
+            }
+            else if (i == 10) {
+                setDay4((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay4Type("Recovery Run")
+            }
+            else if (i == 11) {
+                setDay3((Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)) + " miles");
+                setDay3Type("Tempo + Hills/Short Reps")
+            } 
+            else if (i == 12) {
+                setDay2((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay2Type("Easy Run + Short Speed")
+            }
+            else if (i == 13) {
+                setDay1((Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)) + " miles");
+                setDay1Type("Long Run")
+            }
+        }
+    });
+  }
+  function twoMileTwoWO() {
+    const username = user?.email.split('@')[0];
+    const starCountRef = ref(db, 'users/' + username);
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        for (let i=13; i>=0; i--) {
+            const rndInt = (Math.floor(Math.random() * 21) + 80) * 0.01
+            if (i == 0) {
+                setDay14((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay14Type("Easy Run")
+            }
+            else if (i == 1) {
+                setDay13((Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)) + " miles");
+                setDay13Type("Short Tempo + Race Pace")
+            }
+            else if (i == 2 ) {
+                setDay12((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay12Type("Easy + strides")
+            }
+            else if (i == 3) {
+                setDay11((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay11Type("Recovery Run")
+            }
+            else if (i == 4) {
+                setDay10((Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)) + " miles");
+                setDay10Type("Tempo + Hills/Short Reps")
+            }
+            else if (i == 5) {
+                setDay9((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay9Type("Easy Run + Short Speed")
+            }
+            else if (i == 6) {
+                setDay8((Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)) + " miles");
+                setDay8Type("Long Run")
+            }
+            else if (i == 7) {
+                setDay7((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay7Type("Easy Run")
+            }
+            else if (i == 8) {
+                setDay6((Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)) + " miles");
+                setDay6Type("Short Tempo + Race Pace")
+            }
+            else if (i == 9) {
+                setDay5((Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)) + " miles");
+                setDay5Type("Easy + strides")
+            }
+            else if (i == 10) {
+                setDay4((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay4Type("Recovery Run")
+            }
+            else if (i == 11) {
+                setDay3((Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)) + " miles");
+                setDay3Type("Tempo + Hills/Short Reps")
+            } 
+            else if (i == 12) {
+                setDay2((Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)) + " miles");
+                setDay2Type("Easy Run + Short Speed")
+            }
+            else if (i == 13) {
+                setDay1((Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)) + " miles");
+                setDay1Type("Long Run")
             }
         }
     });
@@ -741,7 +998,7 @@ export default function Calendar() {
                 onChangeText={(date) => {setDay14Date(date)}}
                 />
                 <TextInput 
-                placeholder='MIleage'
+                placeholder='Mileage'
                 value={day14Mileage} 
                 onChangeText={(mileage) => {setDay14(mileage)}}
                 />

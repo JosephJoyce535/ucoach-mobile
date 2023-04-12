@@ -15,10 +15,7 @@ export default function Data() {
   const [goalEvent, setGoalEvent] = useState('');
   const [goalTime, setGoalTime] = useState('');
   const [goalDate, setGoalDate] = useState('');
-  const [longRun, setLongRun] = useState('');
-  const [doubles, setDoubles] = useState('');
   const [mileage, setMileage] = useState('');
-  const [health, setHealth] = useState('');
   const [trainingDistance1, setDistance1] = useState('');
   const [trainingDistance2, setDistance2] = useState('');
   const [trainingDistance3, setDistance3] = useState('');
@@ -38,10 +35,7 @@ export default function Data() {
       setGoalEvent(data.goalEvent);
       setGoalTime(data.goalTime);
       setGoalDate(data.goalDate);
-      setLongRun(data.longRun);
-      setDoubles(data.doubles);
       setMileage(data.mileage);
-      setHealth(data.health);
       setDistance1(data.distance1);
       setDistance2(data.distance2);
       setDistance3(data.distance3);
@@ -87,19 +81,9 @@ export default function Data() {
           onChangeText={(goalDate) => {setGoalDate(goalDate)}} 
           style={styles.textBoxes}
         />
-
-        <Text>Longest Run:</Text>
-        <TextInput 
-          value={longRun} onChangeText={(longRun) => {setLongRun(longRun)}} placeholder='Long Run' style={styles.textBoxes}></TextInput>
-        
-        <Text># of doubles in a week:</Text>
-        <TextInput value={doubles} onChangeText={(doubles) => {setDoubles(doubles)}} placeholder='Doubles' style={styles.textBoxes}></TextInput>
         
         <Text>Weekly Mileage:</Text>
         <TextInput value={mileage} onChangeText={(mileage) => {setMileage(mileage)}} placeholder='Mileage' style={styles.textBoxes}></TextInput>
-        
-        <Text>Health Percentage:</Text>
-        <TextInput value={health} onChangeText={(health) => {setHealth(health)}} placeholder='Health' style={styles.textBoxes}></TextInput>
         
         <Text>{trainingDistance1}:</Text>
         <TextInput value={time1} onChangeText={(time1) => {setTime1(time1)}} placeholder='' style={styles.textBoxes}></TextInput>
