@@ -112,7 +112,7 @@ export default function App({navigation}) {
             distance3 = "800m";
             distance4 = "1600m";
         }
-        else if (trainingType === "Strength") {
+        else {
             athleteType = "800m/1600m";
             distance1 = "400m";
             distance2 = "800m";
