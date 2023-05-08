@@ -3,10 +3,12 @@ import { StyleSheet, Text, View, TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const auth = getAuth();
 
 const SignInScreen = () => {
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
   const [value, setValue] = React.useState({
     email: '',
     password: '',

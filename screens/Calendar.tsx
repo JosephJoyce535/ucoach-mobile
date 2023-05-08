@@ -1,15 +1,21 @@
 import React  from 'react';
 import { StyleSheet, Text, View, TextInput} from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, TabView } from 'react-native-elements';
 import { ref, set, update, onValue, remove } from "firebase/database";
 import { db } from '../config/firebase'; 
 import { getAuth, signOut } from 'firebase/auth';
 import { useAuthentication } from '../utils/hooks/useAuthentication';
 import { useState, useEffect, useRef } from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
+import * as ScreenOrientation from 'expo-screen-orientation';
+//import Orientation from 'react-native-orientation-locker';
 
 const auth = getAuth();
+//Orientation.lockToLandscape();
 
 export default function Calendar() {
+  //Comment for web testing
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
   const { user } = useAuthentication();  
   const [athleteType, setAthleteType] = useState('');
   const [goalEvent, setGoalEvent] = useState('');
@@ -235,6 +241,7 @@ export default function Calendar() {
       
       //console.log("Days Left:" + daysLeft)
       setAthleteType(data.athleteType);
+      console.log("Athlete Type: " + data.athleteType)
       var random = Math.floor(Math.random() * 100)
       if (data.athleteType ==  "400m/800m" || data.athleteType == "800m specialist") {
         if (daysLeft <= 14) {
@@ -244,8 +251,9 @@ export default function Calendar() {
             eightNorm();
         }
       }
-      else if (athleteType ==  "800m/1600m" || athleteType == "1600m specialist") {
+      else if (data.athleteType ==  "800m/1600m" || data.athleteType == "1600m specialist") {
         if (daysLeft <= 14) {
+            console.log("gets to line 255")
             mileTaper(daysLeft);
         }
         else if (random >= 20) {
@@ -609,6 +617,7 @@ export default function Calendar() {
                 else {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.18 * 0.85)
                     mileage -= 3
+                    console.log("Day 3: " + time2MinsSecs(Math.floor(time2Seconds(data.time4)*0.375)))
                     setDay3(`1200m @ ${time2MinsSecs(Math.floor(time2Seconds(data.time4)*0.375))}`);
                     setDay3Type(`2x(600m-400m-200m)`)
                     setDay3Extra(`@ ${time2MinsSecs(Math.floor((time2Seconds(data.time3)*0.375)))}-${time2MinsSecs(Math.floor((time2Seconds(data.time2)/2)+1))}-${Math.floor(time2Seconds(data.time1)/2)+1}`)
@@ -660,16 +669,16 @@ export default function Calendar() {
                     mileage -= 1
                     setDay13(mileage + " miles easy + ");
                     //console.log("time to seconds: " + time2Seconds(data.time1))
-                    setDay13Type(`3x200m @ ${time2Seconds(data.time2)/8}`)
-                    setDay13Extra(`4x150m @ ${time2Seconds(data.time1)*0.1875}`)
+                    setDay13Type(`3x200m @ ${Math.floor(time2Seconds(data.time2)/8)}`)
+                    setDay13Extra(`4x150m @ ${Math.floor(time2Seconds(data.time1)*0.1875)}`)
                 }
                 else {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.1 * 0.8)
                     mileage -= 1
                     setDay13(mileage + " miles easy + ");
                     //console.log("time to seconds: " + time2Seconds(data.time1))
-                    setDay13Type(`2x300m @ ${time2Seconds(data.time3)/16*1.5}`)
-                    setDay13Extra(`4x150m @ ${time2Seconds(data.time1)*0.1875}`)
+                    setDay13Type(`2x300m @ ${Math.floor(time2Seconds(data.time3)/16*1.5)}`)
+                    setDay13Extra(`4x150m @ ${Math.floor(time2Seconds(data.time1)*0.1875)}`)
                 }
                 // if main is mile
                     // easy distance 3x200m @ mile + 4x150m @ 800m 
@@ -679,8 +688,8 @@ export default function Calendar() {
             else if (i == 2 ) {
                 let mileage = Math.floor(parseInt(data.mileage, 10) * 0.15 * 0.8)
                 mileage -= 2.5
-                setDay12(`2x600m @ ${time2MinsSecs(time2Seconds(data.time4)*0.12)}-${time2MinsSecs(time2Seconds(data.time3)*0.1875)}`);
-                setDay12Type(`6x200m @ ${(time2Seconds(data.time2)/8)}-${time2Seconds(data.time1)/4-1}`)
+                setDay12(`2x600m @ ${time2MinsSecs(Math.floor(time2Seconds(data.time4)*0.12))}-${time2MinsSecs(Math.floor(time2Seconds(data.time3)*0.1875))}`);
+                setDay12Type(`6x200m @ ${Math.floor(time2Seconds(data.time2)/8)}-${Math.floor(time2Seconds(data.time1)/4-1)}`)
                 setDay12Extra('200m walk/jog rec.')
                 setDay12ExtraM('Daily Mileage: ' + mileage)
                 // 2x600m @ 5k->3k + 6x200m @ mile -> 800m
@@ -706,18 +715,12 @@ export default function Calendar() {
                     setDay10Type('200m walk/jog rec.')
                     setDay10ExtraM('Daily Mileage: ' + mileage)
                 }
-                //if mile
-                    // 10-12x300m @ mile->800m, 100m walk/jog
-                    // 2.5-3 miles(depends on total mileage) + wu/cd
-                // else if 3200m
-                    // 10-12x400m @ 3200m->mile, 200m walk/jog
-                    // 4-4.5 miles(depends on total mileage) + wu/cd
             }
             else if (i == 5) {
                 let mileage = Math.floor(parseInt(data.mileage, 10) * 0.1 * 0.8)
                 mileage -= 1
                 setDay9(`${mileage} miles easy + `);
-                setDay9Type(`8x100m @ ${time2Seconds(data.time1)/8}`)
+                setDay9Type(`8x100m @ ${Math.floor(time2Seconds(data.time1)/8)}`)
                 // easy mileage + 8x100m @ 800m
             }
             else if (i == 6) {
@@ -729,25 +732,19 @@ export default function Calendar() {
                 if (data.goalEvent == '1600m') {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.12 * 0.9)
                     mileage -= 2.5
-                    setDay7(`1000m @ ${time2MinsSecs(((time2Seconds(data.time2)/4))*2.5)}`);
-                    setDay7Type(`6x300m @ ${(time2Seconds(data.time2)*0.1875)+3}-${(time2Seconds(data.time1)*0.375)}`)
+                    setDay7(`1000m @ ${time2MinsSecs(Math.floor(((time2Seconds(data.time2)/4))*2.5))}`);
+                    setDay7Type(`6x300m @ ${Math.floor((time2Seconds(data.time2)*0.1875)+3)}-${Math.floor(time2Seconds(data.time1)*0.375)}`)
                     setDay7Extra('100m walk, full rest')
                     setDay7ExtraM('Daily Mileage: ' + mileage)
                 }
                 else {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.12 * 0.9)
                     mileage -= 3.5
-                    setDay7(`1600m @ ${time2MinsSecs((time2Seconds(data.time3)/2))}`);
-                    setDay7Type(`8x300m @ ${(time2Seconds(data.time2)*0.1875)+3}-${(time2Seconds(data.time1)*0.375)}`)
+                    setDay7(`1600m @ ${time2MinsSecs(Math.floor((time2Seconds(data.time3)/2)))}`);
+                    setDay7Type(`8x300m @ ${Math.floor((time2Seconds(data.time2)*0.1875)+3)}-${Math.floor(time2Seconds(data.time1)*0.375)}`)
                     setDay7Extra('100m walk, full rest')
                     setDay7ExtraM('Daily Mileage: ' + mileage)
                 }
-                // if mile
-                    // 1k @ mile goal, full rest, 4x250m on 150m walk/jog @ mile->8 pace, full rest, 600m @ mile goal
-                    // 2.5 + wu/cd
-                // if 3200m
-                    // mile @ 3k goal, full rest, 6x300m on 100m walk/jog @ mile pace, full rest, 800m @ mile
-                    // 3.5 + wu/cd
             }
             else if (i == 8) {
                 if (data.goalEvent == '1600m') {
@@ -755,16 +752,16 @@ export default function Calendar() {
                     mileage -= 1
                     setDay6(mileage + " miles easy + ");
                     //console.log("time to seconds: " + time2Seconds(data.time1))
-                    setDay6Type(`3x200m @ ${time2Seconds(data.time2)/8}`)
-                    setDay6Extra(`4x150m @ ${time2Seconds(data.time1)*0.1875}`)
+                    setDay6Type(`3x200m @ ${Math.floor(time2Seconds(data.time2)/8)}`)
+                    setDay6Extra(`4x150m @ ${Math.floor(time2Seconds(data.time1)*0.1875)}`)
                 }
                 else {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.1 * 0.9)
                     mileage -= 1
                     setDay6(mileage + " miles easy + ");
                     //console.log("time to seconds: " + time2Seconds(data.time1))
-                    setDay6Type(`2x300m @ ${time2Seconds(data.time3)/16*1.5}`)
-                    setDay6Extra(`4x150m @ ${time2Seconds(data.time1)*0.1875}`)
+                    setDay6Type(`2x300m @ ${Math.floor(time2Seconds(data.time3)/16*1.5)}`)
+                    setDay6Extra(`4x150m @ ${Math.floor(time2Seconds(data.time1)*0.1875)}`)
                 }
                 // if main is mile
                     // easy distance 3x200m @ mile + 4x150m @ 800m 
@@ -774,8 +771,8 @@ export default function Calendar() {
             else if (i == 9) {
                 let mileage = Math.floor(parseInt(data.mileage, 10) * 0.15 * 0.9)
                 mileage -= 2.5
-                setDay5(`3x1000m @ ${time2MinsSecs(time2Seconds(data.time4)*0.2)}-${time2MinsSecs(time2Seconds(data.time3)*0.3125)}`);
-                setDay5Type(`6x200m @ ${(time2Seconds(data.time2)/8)}-${time2Seconds(data.time1)/4-1}`)
+                setDay5(`3x1000m @ ${time2MinsSecs(Math.floor(time2Seconds(data.time4)*0.2))}-${time2MinsSecs(Math.floor(time2Seconds(data.time3)*0.3125))}`);
+                setDay5Type(`6x200m @ ${Math.floor(time2Seconds(data.time2)/8)}-${Math.floor(time2Seconds(data.time1)/4-1)}`)
                 setDay5Extra('200m walk/jog rec.')
                 setDay5ExtraM('Daily Mileage: ' + mileage)
                 // 3x1k @ 5k->3k + 6x200m @ mile -> 800m
@@ -790,18 +787,17 @@ export default function Calendar() {
                 if (data.goalEvent == '1600m') {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.18 * 0.9)
                     mileage -= 3.5
-                    setDay3(`8x300m @ ${time2Seconds(data.time2)*0.1875} w/ 100m walk/jog`);
-                    setDay3Type(`1200m @ ${time2MinsSecs(time2Seconds(data.time3)*0.375)} + 400m @ ${time2Seconds(data.time1)/2}`)
-                    setDay3Extra(`@ ${(time2Seconds(data.time2)*0.625)}-${1.5*(time2Seconds(data.time2)/4)-1}-${(time2Seconds(data.time1)/2)}`)
-                    setDay3ExtraM('400m walk/jog after last 300m and 1200m')
+                    setDay3(`8x300m @ ${Math.floor(time2Seconds(data.time2)*0.1875)} w/ 100m walk/jog`);
+                    setDay3Type(`1200m @ ${time2MinsSecs(Math.floor(time2Seconds(data.time3)*0.375))} + 400m @ ${Math.floor(time2Seconds(data.time1)/2)}`)
+                    setDay3Extra('400m walk/jog after last 300m and 1200m')
                     setDay3Extra3('Daily Mileage: ' + mileage)
                 }
                 else {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.18 * 0.9)
                     mileage -= 4.5
-                    setDay3(`2000m @ ${time2MinsSecs(time2Seconds(data.time4)*0.4)}`);
+                    setDay3(`2000m @ ${time2MinsSecs(Math.floor(time2Seconds(data.time4)*0.4))}`);
                     setDay3Type(`4x 800m(600m-200m)`)
-                    setDay3Extra(`@ (${time2MinsSecs((time2Seconds(data.time4)*0.12))}-${(time2Seconds(data.time1)/4)})`)
+                    setDay3Extra(`@ (${time2MinsSecs(Math.floor(time2Seconds(data.time4)*0.12))}-${Math.floor(time2Seconds(data.time1)/4)})`)
                     setDay3ExtraM('400m walk/jog rec.')
                     setDay3Extra3('Daily Mileage: ' + mileage)
                 }
@@ -1034,7 +1030,7 @@ export default function Calendar() {
     //1600m @ 800m + 60, 8x150m hill @ 800m effort
     Type: `1600m @ `,
     TypeTime: "data.time3",
-    TypeAdd: 28,
+    TypeAdd: 36,
     TypeMult: 2,
     Extra: `6x150m hill @ `,
     ExtraTime: "data.time3",
@@ -1636,7 +1632,7 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 5)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)
                 mileage -= 3.5
-                setDay14(eightLRP[w].Type + time2MinsSecs(eightLRP[w].TypeMult * time2Seconds(eval(eightLRP[w].TypeTime))))
+                setDay14(eightLRP[w].Type + time2MinsSecs(Math.floor(eightLRP[w].TypeMult * time2Seconds(eval(eightLRP[w].TypeTime)))))
                 setDay14Type(eightLRP[w].Extra)
                 setDay14ExtraM(`Daily Mileage: ${mileage}`)
             }
@@ -1649,7 +1645,7 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 3)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1.5
-                setDay12(eightSpeed[w].Type + (eightSpeed[w].TypeMult * time2Seconds(eval(eightSpeed[w].TypeTime))))
+                setDay12(eightSpeed[w].Type + Math.floor(eightSpeed[w].TypeMult * time2Seconds(eval(eightSpeed[w].TypeTime))))
                 setDay12Type(eightSpeed[w].Extra)
                 setDay12ExtraM(`Daily Mileage: ${mileage}`)
             }
@@ -1663,7 +1659,7 @@ export default function Calendar() {
                     let w = Math.floor(Math.random() * 3)
                     let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)
                     mileage -= 3.5
-                    setDay10(fourEightT[w].Type + (fourEightT[w].TypeMult * (time2Seconds(eval(fourEightT[w].TypeTime)) + fourEightT[w].TypeAdd)))
+                    setDay10(fourEightT[w].Type + Math.floor(fourEightT[w].TypeMult * (time2Seconds(eval(fourEightT[w].TypeTime)) + fourEightT[w].TypeAdd)))
                     setDay10Type(fourEightT[w].Extra)
                     setDay10ExtraM(`Daily Mileage: ${mileage}`)
                 }
@@ -1671,7 +1667,7 @@ export default function Calendar() {
                     let w = Math.floor(Math.random() * 3)
                     let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)
                     mileage -= 5
-                    setDay10(eightSpecT[w].Type + (eightSpecT[w].TypeMult * (time2Seconds(eval(eightSpecT[w].TypeTime)) + eightSpecT[w].TypeAdd)))
+                    setDay10(eightSpecT[w].Type + Math.floor(eightSpecT[w].TypeMult * (time2Seconds(eval(eightSpecT[w].TypeTime)) + eightSpecT[w].TypeAdd)))
                     setDay10Type(eightSpecT[w].Extra)
                     setDay10ExtraM(`Daily Mileage: ${mileage}`)
                 }
@@ -1681,8 +1677,8 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay9(`${mileage} miles easy + `);
-                setDay9Type(eightESS[w].Type + (eightESS[w].TypeMult * time2Seconds(eval(eightESS[w].TypeTime))))
-                setDay9Extra(eightESS[w].Extra + (eightESS[w].ExtraMult * time2Seconds(eval(eightESS[w].ExtraTime))))
+                setDay9Type(eightESS[w].Type + Math.floor(eightESS[w].TypeMult * time2Seconds(eval(eightESS[w].TypeTime))))
+                setDay9Extra(eightESS[w].Extra + Math.floor(eightESS[w].ExtraMult * time2Seconds(eval(eightESS[w].ExtraTime))))
             }
             else if (i == 6) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)
@@ -1693,7 +1689,7 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)
                 mileage -= 3
-                setDay7(eightSRP[w].Type + (eightSRP[w].TypeMult * time2Seconds(eval(eightSRP[w].TypeTime))))
+                setDay7(eightSRP[w].Type + Math.floor(eightSRP[w].TypeMult * time2Seconds(eval(eightSRP[w].TypeTime))))
                 setDay7Type(eightSRP[w].Extra)
                 setDay7ExtraM(`Daily Mileage: ${mileage}`)
             }
@@ -1701,16 +1697,16 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay6(mileage + " miles easy + ");
-                setDay6Type(`2x200m @ ${time2Seconds(data.time3)/4}`)
-                setDay6Extra(`4x150m @ ${time2Seconds(data.time2)*0.375}`)
+                setDay6Type(`2x200m @ ${Math.floor(time2Seconds(data.time3)/4)}`)
+                setDay6Extra(`4x150m @ ${Math.floor(time2Seconds(data.time2)*0.375)}`)
             }
             else if (i == 9) {
                 if (data.athleteType == "400m/800m") {
                     let w = Math.floor(Math.random() * 3)
                     let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)
                     mileage -= 2.5
-                    setDay5(fourEightA[w].Type + time2MinsSecs(fourEightA[w].TypeMult * (time2Seconds(eval(fourEightA[w].TypeTime)) + fourEightA[w].TypeAdd)))
-                    setDay5Type(fourEightA[w].Extra + (fourEightA[w].ExtraMult * (time2Seconds(eval(fourEightA[w].ExtraTime)))))
+                    setDay5(fourEightA[w].Type + time2MinsSecs(Math.floor(fourEightA[w].TypeMult * (time2Seconds(eval(fourEightA[w].TypeTime))) + fourEightA[w].TypeAdd)))
+                    setDay5Type(fourEightA[w].Extra + Math.floor(fourEightA[w].ExtraMult * Math.floor(time2Seconds(eval(fourEightA[w].ExtraTime)))))
                     setDay5Extra(fourEightA[w].ExtraM)
                     setDay5ExtraM(`Daily Mileage: ${mileage}`)
                 }
@@ -1718,8 +1714,8 @@ export default function Calendar() {
                     let w = Math.floor(Math.random() * 3)
                     let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)
                     mileage -= 3.5
-                    setDay5(eightSpecA[w].Type + time2MinsSecs(eightSpecA[w].TypeMult * (time2Seconds(eval(eightSpecA[w].TypeTime)) + eightSpecA[w].TypeAdd)))
-                    setDay5Type(eightSpecA[w].Extra + (eightSpecA[w].ExtraMult * (time2Seconds(eval(eightSpecA[w].ExtraTime)))))
+                    setDay5(eightSpecA[w].Type + time2MinsSecs(Math.floor(eightSpecA[w].TypeMult * (time2Seconds(eval(eightSpecA[w].TypeTime)) + eightSpecA[w].TypeAdd))))
+                    setDay5Type(eightSpecA[w].Extra + Math.floor(eightSpecA[w].ExtraMult * (time2Seconds(eval(eightSpecA[w].ExtraTime)))))
                     setDay5Extra(eightSpecA[w].ExtraM)
                     setDay5ExtraM(`Daily Mileage: ${mileage}`)
                 }
@@ -1736,7 +1732,7 @@ export default function Calendar() {
                     let w = Math.floor(Math.random() * 5)
                     let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)
                     mileage -= 3.5
-                    setDay3(eightLRP[w].Type + time2MinsSecs(eightLRP[w].TypeMult * time2Seconds(eval(eightLRP[w].TypeTime))))
+                    setDay3(eightLRP[w].Type + time2MinsSecs(Math.floor(eightLRP[w].TypeMult * (time2Seconds(eval(eightLRP[w].TypeTime))))))
                     setDay3Type(eightLRP[w].Extra)
                     setDay3ExtraM(`Daily Mileage: ${mileage}`)
                 }
@@ -1744,7 +1740,7 @@ export default function Calendar() {
                     let w = Math.floor(Math.random() * 3)
                     let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)
                     mileage -= 5
-                    setDay3(eightSpecT[w].Type + (eightSpecT[w].TypeMult * (time2Seconds(eval(eightSpecT[w].TypeTime)) + eightSpecT[w].TypeAdd)))
+                    setDay3(eightSpecT[w].Type + Math.floor(eightSpecT[w].TypeMult * (time2Seconds(eval(eightSpecT[w].TypeTime)) + eightSpecT[w].TypeAdd)))
                     setDay3Type(eightSpecT[w].Extra)
                     setDay3ExtraM(`Daily Mileage: ${mileage}`)
                 }
@@ -1754,8 +1750,8 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay2(`${mileage} miles easy + `);
-                setDay2Type(eightESS[w].Type + (eightESS[w].TypeMult * time2Seconds(eval(eightESS[w].TypeTime))))
-                setDay2Extra(eightESS[w].Extra + (eightESS[w].ExtraMult * time2Seconds(eval(eightESS[w].ExtraTime))))
+                setDay2Type(eightESS[w].Type + Math.floor(eightESS[w].TypeMult * time2Seconds(eval(eightESS[w].TypeTime))))
+                setDay2Extra(eightESS[w].Extra + Math.floor(eightESS[w].ExtraMult * time2Seconds(eval(eightESS[w].ExtraTime))))
             }
             else if (i == 13) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.15 * rndInt)
@@ -1776,10 +1772,10 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)
                 mileage -= 5
-                let x = time2MinsSecs(mileLRP[w].Extra1TimeMult * (time2Seconds(eval(mileLRP[w].Extra1Time)) + mileLRP[w].Extra1Add))
-                let y = time2MinsSecs(mileLRP[w].Extra2TimeMult * (time2Seconds(eval(mileLRP[w].Extra2Time)) + mileLRP[w].Extra2Add))
+                let x = time2MinsSecs(Math.floor(mileLRP[w].Extra1TimeMult * Math.floor(time2Seconds(eval(mileLRP[w].Extra1Time)) + mileLRP[w].Extra1Add)))
+                let y = time2MinsSecs(Math.floor(mileLRP[w].Extra2TimeMult * Math.floor(time2Seconds(eval(mileLRP[w].Extra2Time)) + mileLRP[w].Extra2Add)))
                 //console.log(time2Seconds(eval(mileLRP[w].Extra3Time)) + )
-                let z = time2MinsSecs(mileLRP[w].Extra3TimeMult * (time2Seconds(eval(mileLRP[w].Extra3Time)) + mileLRP[w].Extra3Add))
+                let z = time2MinsSecs(Math.floor(mileLRP[w].Extra3TimeMult * Math.floor(time2Seconds(eval(mileLRP[w].Extra3Time)) + mileLRP[w].Extra3Add)))
                 //console.log(time2Seconds(eval(mileLRP[w].Extra3Time)))
                 setDay14(mileLRP[w].Type)
                 setDay14Type(`@ (` + x + `-` + y + `-` + z + `)`)
@@ -1792,24 +1788,24 @@ export default function Calendar() {
                     mileage -= 1
                     setDay13(mileage + " miles easy + ");
                     //console.log("time to seconds: " + time2Seconds(data.time1))
-                    setDay13Type(`2x200m @ ${time2Seconds(data.time2)/4}`)
-                    setDay13Extra(`4x150m @ ${time2Seconds(data.time1)*0.375}`)
+                    setDay13Type(`2x200m @ ${Math.floor(time2Seconds(data.time2)/4)}`)
+                    setDay13Extra(`4x150m @ ${Math.floor(time2Seconds(data.time1)*0.375)}`)
                 }
                 else {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.1 * rndInt)
                     mileage -= 1
                     setDay13(mileage + " miles easy + ");
                     //console.log("time to seconds: " + time2Seconds(data.time1))
-                    setDay13Type(`3x200m @ ${time2Seconds(data.time3)/8}`)
-                    setDay13Extra(`4x150m @ ${time2Seconds(data.time1)*0.375}`)
+                    setDay13Type(`3x200m @ ${Math.floor(time2Seconds(data.time3)/8)}`)
+                    setDay13Extra(`4x150m @ ${Math.floor(time2Seconds(data.time1)*0.375)}`)
                 }
             }
             else if (i == 2 ) {
                 let w = Math.floor(Math.random() * 3)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.17 * rndInt)
                 mileage -= 3.5
-                setDay12(mileTune[w].Type + time2MinsSecs(mileTune[w].TypeMult * (time2Seconds(eval(mileTune[w].TypeTime)) + mileTune[w].TypeAdd)))
-                setDay12Type(mileTune[w].Extra + (mileTune[w].ExtraMult * (time2Seconds(eval(mileTune[w].ExtraTime)))))
+                setDay12(mileTune[w].Type + time2MinsSecs(Math.floor(mileTune[w].TypeMult * Math.floor(time2Seconds(eval(mileTune[w].TypeTime)) + mileTune[w].TypeAdd))))
+                setDay12Type(mileTune[w].Extra + Math.floor(mileTune[w].ExtraMult * Math.floor(time2Seconds(eval(mileTune[w].ExtraTime)))))
                 setDay12Extra(mileTune[w].ExtraM)
                 setDay12Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -1822,7 +1818,7 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 5)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)
                 mileage -= 4
-                setDay10(mileV[w].Type + time2MinsSecs(mileV[w].TypeMult * time2Seconds(eval(mileV[w].TypeTime))))
+                setDay10(mileV[w].Type + time2MinsSecs(Math.floor(mileV[w].TypeMult * Math.floor(time2Seconds(eval(mileV[w].TypeTime))))))
                 setDay10Type(mileV[w].Extra)
                 setDay10Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -1831,8 +1827,8 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay9(`${mileage} miles easy + `);
-                setDay9Type(mileESS[w].Type + (mileESS[w].TypeMult * time2Seconds(eval(mileESS[w].TypeTime))))
-                setDay9Extra(mileESS[w].Extra + (mileESS[w].ExtraMult * time2Seconds(eval(mileESS[w].ExtraTime))))
+                setDay9Type(mileESS[w].Type + Math.floor(mileESS[w].TypeMult * time2Seconds(eval(mileESS[w].TypeTime))))
+                setDay9Extra(mileESS[w].Extra + Math.floor(mileESS[w].ExtraMult * time2Seconds(eval(mileESS[w].ExtraTime))))
             }
             else if (i == 6) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)
@@ -1848,8 +1844,8 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)
                 mileage -= 4
-                setDay6(mileTRP[w].Type + time2MinsSecs(mileTRP[w].TypeMult * (time2Seconds(eval(mileTRP[w].TypeTime)) + mileTRP[w].TypeAdd)))
-                setDay6Type(mileTRP[w].Extra + time2MinsSecs(mileTRP[w].ExtraMult * (time2Seconds(eval(mileTRP[w].ExtraTime)))))
+                setDay6(mileTRP[w].Type + time2MinsSecs(Math.floor(mileTRP[w].TypeMult * Math.floor(time2Seconds(eval(mileTRP[w].TypeTime)) + mileTRP[w].TypeAdd))))
+                setDay6Type(mileTRP[w].Extra + time2MinsSecs(Math.floor(mileTRP[w].ExtraMult * Math.floor(time2Seconds(eval(mileTRP[w].ExtraTime))))))
                 setDay6Extra(mileTRP[w].ExtraM)
                 setDay6Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -1868,7 +1864,7 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)
                 mileage -= 5
                 setDay3(mileTSR[w].Type + time2MinsSecs(Math.floor(mileTSR[w].TypeMult * (time2Seconds(eval(mileTSR[w].TypeTime)) + mileTSR[w].TypeAdd))))
-                setDay3Type(mileTSR[w].Extra + (mileTSR[w].ExtraMult * (time2Seconds(eval(mileTSR[w].ExtraTime)))))
+                setDay3Type(mileTSR[w].Extra + Math.floor(mileTSR[w].ExtraMult * Math.floor(time2Seconds(eval(mileTSR[w].ExtraTime)))))
                 setDay3Extra(mileTSR[w].ExtraM)
                 setDay3Extra3(`Daily Mileage: ${mileage}`)
             } 
@@ -1877,8 +1873,8 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay2(`${mileage} miles easy + `);
-                setDay2Type(mileESS[w].Type + (mileESS[w].TypeMult * time2Seconds(eval(mileESS[w].TypeTime))))
-                setDay2Extra(mileESS[w].Extra + (mileESS[w].ExtraMult * time2Seconds(eval(mileESS[w].ExtraTime))))
+                setDay2Type(mileESS[w].Type + Math.floor(mileESS[w].TypeMult * time2Seconds(eval(mileESS[w].TypeTime))))
+                setDay2Extra(mileESS[w].Extra + Math.floor(mileESS[w].ExtraMult * time2Seconds(eval(mileESS[w].ExtraTime))))
             }
             else if (i == 13) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)
@@ -1904,15 +1900,15 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)
                 mileage -= 4
-                setDay13(mileTRP[w].Type + time2MinsSecs(mileTRP[w].TypeMult * (time2Seconds(eval(mileTRP[w].TypeTime)) + mileTRP[w].TypeAdd)))
-                setDay13Type(mileTRP[w].Extra + (mileTRP[w].ExtraMult * (time2Seconds(eval(mileTRP[w].ExtraTime)))))
+                setDay13(mileTRP[w].Type + time2MinsSecs(Math.floor(mileTRP[w].TypeMult * (time2Seconds(eval(mileTRP[w].TypeTime)) + mileTRP[w].TypeAdd))))
+                setDay13Type(mileTRP[w].Extra + time2MinsSecs(Math.floor(mileTRP[w].ExtraMult * Math.floor(time2Seconds(eval(mileTRP[w].ExtraTime))))))
                 setDay13Extra(mileTRP[w].ExtraM)
                 setDay13Extra3(`Daily Mileage: ${mileage}`)
             }
             else if (i == 2 ) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)
                 setDay12(`${mileage-1}-${mileage+1} miles easy`);
-                setDay12Type("4x150m strides");
+                setDay12Type("4x150m accelerations");
             }
             else if (i == 3) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
@@ -1923,8 +1919,8 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)
                 mileage -= 5
-                setDay10(mileTSR[w].Type + time2MinsSecs(mileTSR[w].TypeMult * (time2Seconds(eval(mileTSR[w].TypeTime)) + mileTSR[w].TypeAdd)))
-                setDay10Type(mileTSR[w].Extra + (mileTSR[w].ExtraMult * (time2Seconds(eval(mileTSR[w].ExtraTime)))))
+                setDay10(mileTSR[w].Type + time2MinsSecs(Math.floor(mileTSR[w].TypeMult * Math.floor(time2Seconds(eval(mileTSR[w].TypeTime)) + mileTSR[w].TypeAdd))))
+                setDay10Type(mileTSR[w].Extra + Math.floor(mileTSR[w].ExtraMult * Math.floor(time2Seconds(eval(mileTSR[w].ExtraTime)))))
                 setDay10Extra(mileTSR[w].ExtraM)
                 setDay10Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -1933,8 +1929,8 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay9(`${mileage} miles easy + `);
-                setDay9Type(mileESS[w].Type + (mileESS[w].TypeMult * time2Seconds(eval(mileESS[w].TypeTime))))
-                setDay9Extra(mileESS[w].Extra + (mileESS[w].ExtraMult * time2Seconds(eval(mileESS[w].ExtraTime))))
+                setDay9Type(mileESS[w].Type + Math.floor(mileESS[w].TypeMult * time2Seconds(eval(mileESS[w].TypeTime))))
+                setDay9Extra(mileESS[w].Extra + Math.floor(mileESS[w].ExtraMult * time2Seconds(eval(mileESS[w].ExtraTime))))
             }
             else if (i == 6) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)
@@ -1950,9 +1946,9 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)
                 mileage -= 4
-                setDay6(mileTRP[w].Type + time2MinsSecs(mileTRP[w].TypeMult * (time2Seconds(eval(mileTRP[w].TypeTime)) + mileTRP[w].TypeAdd)))
+                setDay6(mileTRP[w].Type + time2MinsSecs(Math.floor(mileTRP[w].TypeMult * Math.floor(time2Seconds(eval(mileTRP[w].TypeTime)) + mileTRP[w].TypeAdd))))
                 //console.log(time2MinsSecs(mileTRP[w].ExtraMult * (time2Seconds(eval(mileTRP[w].ExtraTime)))))
-                setDay6Type(mileTRP[w].Extra + time2MinsSecs(mileTRP[w].ExtraMult * (time2Seconds(eval(mileTRP[w].ExtraTime)))))
+                setDay6Type(mileTRP[w].Extra + time2MinsSecs(Math.floor(mileTRP[w].ExtraMult * Math.floor(time2Seconds(eval(mileTRP[w].ExtraTime))))))
                 setDay6Extra(mileTRP[w].ExtraM)
                 setDay6Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -1971,7 +1967,7 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)
                 mileage -= 5
                 setDay3(mileTSR[w].Type + time2MinsSecs(Math.floor(mileTSR[w].TypeMult * (time2Seconds(eval(mileTSR[w].TypeTime)) + mileTSR[w].TypeAdd))))
-                setDay3Type(mileTSR[w].Extra + (mileTSR[w].ExtraMult * (time2Seconds(eval(mileTSR[w].ExtraTime)))))
+                setDay3Type(mileTSR[w].Extra + Math.floor(mileTSR[w].ExtraMult * (time2Seconds(eval(mileTSR[w].ExtraTime)))))
                 setDay3Extra(mileTSR[w].ExtraM)
                 setDay3Extra3(`Daily Mileage: ${mileage}`)
             } 
@@ -1980,8 +1976,8 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay2(`${mileage} miles easy + `);
-                setDay2Type(mileESS[w].Type + (mileESS[w].TypeMult * time2Seconds(eval(mileESS[w].TypeTime))))
-                setDay2Extra(mileESS[w].Extra + (mileESS[w].ExtraMult * time2Seconds(eval(mileESS[w].ExtraTime))))
+                setDay2Type(mileESS[w].Type + Math.floor(mileESS[w].TypeMult * time2Seconds(eval(mileESS[w].TypeTime))))
+                setDay2Extra(mileESS[w].Extra + Math.floor(mileESS[w].ExtraMult * time2Seconds(eval(mileESS[w].ExtraTime))))
             }
             else if (i == 13) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)
@@ -2002,9 +1998,9 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)
                 mileage -= 5
-                let x = time2MinsSecs(twoMileLRP[w].Extra1TimeMult * (time2Seconds(eval(twoMileLRP[w].Extra1Time)) + twoMileLRP[w].Extra1Add))
-                let y = time2MinsSecs(twoMileLRP[w].Extra2TimeMult * (time2Seconds(eval(twoMileLRP[w].Extra2Time)) + twoMileLRP[w].Extra2Add))
-                let z = time2MinsSecs(twoMileLRP[w].Extra3TimeMult * (time2Seconds(eval(twoMileLRP[w].Extra3Time)) + twoMileLRP[w].Extra3Add))
+                let x = time2MinsSecs(Math.floor(twoMileLRP[w].Extra1TimeMult * Math.floor(time2Seconds(eval(twoMileLRP[w].Extra1Time)) + twoMileLRP[w].Extra1Add)))
+                let y = time2MinsSecs(Math.floor(twoMileLRP[w].Extra2TimeMult * Math.floor(time2Seconds(eval(twoMileLRP[w].Extra2Time)) + twoMileLRP[w].Extra2Add)))
+                let z = time2MinsSecs(Math.floor(twoMileLRP[w].Extra3TimeMult * Math.floor(time2Seconds(eval(twoMileLRP[w].Extra3Time)) + twoMileLRP[w].Extra3Add)))
                 //console.log(time2Seconds(eval(twoMileLRP[w].Extra3Time)))
                 setDay14(twoMileLRP[w].Type)
                 setDay14Type(`@ (` + x + `-` + y + `-` + z + `)`)
@@ -2017,24 +2013,24 @@ export default function Calendar() {
                     mileage -= 1
                     setDay13(mileage + " miles easy + ");
                     //console.log("time to seconds: " + time2Seconds(data.time1))
-                    setDay13Type(`3x200m @ ${time2Seconds(data.time2)/8}`)
-                    setDay13Extra(`4x150m @ ${time2Seconds(data.time1)*0.1875}`)
+                    setDay13Type(`3x200m @ ${Math.floor(time2Seconds(data.time2)/8)}`)
+                    setDay13Extra(`4x150m @ ${Math.floor(time2Seconds(data.time1)*0.1875)}`)
                 }
                 else {
                     let mileage = Math.floor(parseInt(data.mileage, 10) * 0.1 * rndInt)
                     mileage -= 1
                     setDay13(mileage + " miles easy + ");
                     //console.log("time to seconds: " + time2Seconds(data.time1))
-                    setDay13Type(`2x300m @ ${time2Seconds(data.time3)/16*1.5}`)
-                    setDay13Extra(`4x150m @ ${time2Seconds(data.time1)*0.1875}`)
+                    setDay13Type(`2x300m @ ${Math.floor(time2Seconds(data.time3)/16*1.5)}`)
+                    setDay13Extra(`4x150m @ ${Math.floor(time2Seconds(data.time1)*0.1875)}`)
                 }
             }
             else if (i == 2 ) {
                 let w = Math.floor(Math.random() * 3)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.17 * rndInt)
                 mileage -= 3.5
-                setDay12(twoMileTune[w].Type + time2MinsSecs(twoMileTune[w].TypeMult * (time2Seconds(eval(twoMileTune[w].TypeTime)) + twoMileTune[w].TypeAdd)))
-                setDay12Type(twoMileTune[w].Extra + time2MinsSecs(twoMileTune[w].ExtraMult * (time2Seconds(eval(twoMileTune[w].ExtraTime)))))
+                setDay12(twoMileTune[w].Type + time2MinsSecs(Math.floor(twoMileTune[w].TypeMult * Math.floor(time2Seconds(eval(twoMileTune[w].TypeTime)) + twoMileTune[w].TypeAdd))))
+                setDay12Type(twoMileTune[w].Extra + time2MinsSecs(Math.floor(twoMileTune[w].ExtraMult * Math.floor(time2Seconds(eval(twoMileTune[w].ExtraTime))))))
                 setDay12Extra(twoMileTune[w].ExtraM)
                 setDay12Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -2047,7 +2043,7 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 5)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)
                 mileage -= 5
-                setDay10(twoMileV[w].Type + time2MinsSecs(twoMileV[w].TypeMult * time2Seconds(eval(twoMileV[w].TypeTime))))
+                setDay10(twoMileV[w].Type + time2MinsSecs(Math.floor(twoMileV[w].TypeMult * Math.floor(time2Seconds(eval(twoMileV[w].TypeTime))))))
                 setDay10Type(twoMileV[w].Extra)
                 setDay10Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -2056,11 +2052,11 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay9(`${mileage} miles easy + `);
-                setDay9Type(twoMileESS[w].Type + (twoMileESS[w].TypeMult * time2Seconds(eval(twoMileESS[w].TypeTime))))
+                setDay9Type(twoMileESS[w].Type + Math.floor(twoMileESS[w].TypeMult * time2Seconds(eval(twoMileESS[w].TypeTime))))
                 if (w <= 1)
                     setDay9Extra("")
                 else
-                    setDay9Extra(twoMileESS[w].Extra + (twoMileESS[w].ExtraMult * time2Seconds(eval(twoMileESS[w].ExtraTime))))
+                    setDay9Extra(twoMileESS[w].Extra + Math.floor(twoMileESS[w].ExtraMult * time2Seconds(eval(twoMileESS[w].ExtraTime))))
             }
             else if (i == 6) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.2 * rndInt)
@@ -2076,8 +2072,8 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)
                 mileage -= 4
-                setDay6(twoMileTRP[w].Type + time2MinsSecs(twoMileTRP[w].TypeMult * (time2Seconds(eval(twoMileTRP[w].TypeTime)) + twoMileTRP[w].TypeAdd)))
-                setDay6Type(twoMileTRP[w].Extra + time2MinsSecs(twoMileTRP[w].ExtraMult * (time2Seconds(eval(twoMileTRP[w].ExtraTime)))))
+                setDay6(twoMileTRP[w].Type + time2MinsSecs(Math.floor(twoMileTRP[w].TypeMult * Math.floor(time2Seconds(eval(twoMileTRP[w].TypeTime)) + twoMileTRP[w].TypeAdd))))
+                setDay6Type(twoMileTRP[w].Extra + time2MinsSecs(Math.floor(twoMileTRP[w].ExtraMult * Math.floor(time2Seconds(eval(twoMileTRP[w].ExtraTime))))))
                 setDay6Extra(twoMileTRP[w].ExtraM)
                 setDay6Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -2095,9 +2091,9 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)
                 mileage -= 5
-                console.log("Day 3: " + twoMileTSR[w].Type + time2MinsSecs(twoMileTSR[w].TypeMult * (time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd)))
-                setDay3(twoMileTSR[w].Type + time2MinsSecs(twoMileTSR[w].TypeMult * (time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd)))
-                setDay3Type(twoMileTSR[w].Extra + time2MinsSecs(twoMileTSR[w].ExtraMult * (time2Seconds(eval(twoMileTSR[w].ExtraTime)))))
+                console.log("Day 3: " + twoMileTSR[w].Type + time2MinsSecs(twoMileTSR[w].TypeMult * Math.floor(time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd)))
+                setDay3(twoMileTSR[w].Type + time2MinsSecs(Math.floor(twoMileTSR[w].TypeMult * Math.floor(time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd))))
+                setDay3Type(twoMileTSR[w].Extra + time2MinsSecs(Math.floor(twoMileTSR[w].ExtraMult * Math.floor(time2Seconds(eval(twoMileTSR[w].ExtraTime))))))
                 setDay3Extra(twoMileTSR[w].ExtraM)
                 setDay3Extra3(`Daily Mileage: ${mileage}`)
             } 
@@ -2106,11 +2102,11 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay2(`${mileage} miles easy + `);
-                setDay2Type(twoMileESS[w].Type + (twoMileESS[w].TypeMult * time2Seconds(eval(twoMileESS[w].TypeTime))))
+                setDay2Type(twoMileESS[w].Type + Math.floor(twoMileESS[w].TypeMult * time2Seconds(eval(twoMileESS[w].TypeTime))))
                 if (w <= 1)
                     setDay2Extra("")
                 else
-                    setDay2Extra(twoMileESS[w].Extra + (twoMileESS[w].ExtraMult * time2Seconds(eval(twoMileESS[w].ExtraTime))))
+                    setDay2Extra(twoMileESS[w].Extra + Math.floor(twoMileESS[w].ExtraMult * time2Seconds(eval(twoMileESS[w].ExtraTime))))
             }
             else if (i == 13) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)
@@ -2136,15 +2132,15 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)
                 mileage -= 4
-                setDay13(twoMileTRP[w].Type + time2MinsSecs(twoMileTRP[w].TypeMult * (time2Seconds(eval(twoMileTRP[w].TypeTime)) + twoMileTRP[w].TypeAdd)))
-                setDay13Type(twoMileTRP[w].Extra + time2MinsSecs(twoMileTRP[w].ExtraMult * (time2Seconds(eval(twoMileTRP[w].ExtraTime)))))
+                setDay13(twoMileTRP[w].Type + time2MinsSecs(Math.floor(twoMileTRP[w].TypeMult * Math.floor(time2Seconds(eval(twoMileTRP[w].TypeTime)) + twoMileTRP[w].TypeAdd))))
+                setDay13Type(twoMileTRP[w].Extra + time2MinsSecs(Math.floor(twoMileTRP[w].ExtraMult * Math.floor(time2Seconds(eval(twoMileTRP[w].ExtraTime))))))
                 setDay13Extra(twoMileTRP[w].ExtraM)
                 setDay13Extra3(`Daily Mileage: ${mileage}`)
             }
             else if (i == 2 ) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.12 * rndInt)
                 setDay12(`${mileage-1}-${mileage+1} miles easy`);
-                setDay12Type("4x150m strides");
+                setDay12Type("4x150m accelerations");
             }
             else if (i == 3) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
@@ -2155,8 +2151,8 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)
                 mileage -= 5
-                setDay10(twoMileTSR[w].Type + time2MinsSecs(twoMileTSR[w].TypeMult * (time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd)))
-                setDay10Type(twoMileTSR[w].Extra + time2MinsSecs(twoMileTSR[w].ExtraMult * (time2Seconds(eval(twoMileTSR[w].ExtraTime)))))
+                setDay10(twoMileTSR[w].Type + time2MinsSecs(Math.floor(twoMileTSR[w].TypeMult * Math.floor(time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd))))
+                setDay10Type(twoMileTSR[w].Extra + time2MinsSecs(Math.floor(twoMileTSR[w].ExtraMult * Math.floor(time2Seconds(eval(twoMileTSR[w].ExtraTime))))))
                 setDay10Extra(twoMileTSR[w].ExtraM)
                 setDay10Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -2165,11 +2161,11 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay9(`${mileage} miles easy + `);
-                setDay9Type(twoMileESS[w].Type + (twoMileESS[w].TypeMult * time2Seconds(eval(twoMileESS[w].TypeTime))))
+                setDay9Type(twoMileESS[w].Type + Math.floor(twoMileESS[w].TypeMult * time2Seconds(eval(twoMileESS[w].TypeTime))))
                 if (w <= 1)
                     setDay9Extra("")
                 else
-                    setDay9Extra(twoMileESS[w].Extra + (twoMileESS[w].ExtraMult * time2Seconds(eval(twoMileESS[w].ExtraTime))))
+                    setDay9Extra(twoMileESS[w].Extra + Math.floor(twoMileESS[w].ExtraMult * time2Seconds(eval(twoMileESS[w].ExtraTime))))
             }
             else if (i == 6) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)
@@ -2185,8 +2181,8 @@ export default function Calendar() {
                 let w = Math.floor(Math.random() * 4)
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.16 * rndInt)
                 mileage -= 4
-                setDay6(twoMileTRP[w].Type + time2MinsSecs(twoMileTRP[w].TypeMult * (time2Seconds(eval(twoMileTRP[w].TypeTime)) + twoMileTRP[w].TypeAdd)))
-                setDay6Type(twoMileTRP[w].Extra + time2MinsSecs(twoMileTRP[w].ExtraMult * (time2Seconds(eval(twoMileTRP[w].ExtraTime)))))
+                setDay6(twoMileTRP[w].Type + time2MinsSecs(Math.floor(twoMileTRP[w].TypeMult * Math.floor(time2Seconds(eval(twoMileTRP[w].TypeTime))) + twoMileTRP[w].TypeAdd)))
+                setDay6Type(twoMileTRP[w].Extra + time2MinsSecs(Math.floor(twoMileTRP[w].ExtraMult * Math.floor(time2Seconds(eval(twoMileTRP[w].ExtraTime))))))
                 setDay6Extra(twoMileTRP[w].ExtraM)
                 setDay6Extra3(`Daily Mileage: ${mileage}`)
             }
@@ -2205,8 +2201,8 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.18 * rndInt)
                 mileage -= 5
                 console.log("Day 3: " + twoMileTSR[w].Type + time2MinsSecs(twoMileTSR[w].TypeMult * (time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd)))
-                setDay3(twoMileTSR[w].Type + time2MinsSecs(twoMileTSR[w].TypeMult * (time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd)))
-                setDay3Type(twoMileTSR[w].Extra + time2MinsSecs(twoMileTSR[w].ExtraMult * (time2Seconds(eval(twoMileTSR[w].ExtraTime)))))
+                setDay3(twoMileTSR[w].Type + time2MinsSecs(Math.floor(twoMileTSR[w].TypeMult * Math.floor(time2Seconds(eval(twoMileTSR[w].TypeTime)) + twoMileTSR[w].TypeAdd))))
+                setDay3Type(twoMileTSR[w].Extra + time2MinsSecs(Math.floor(twoMileTSR[w].ExtraMult * Math.floor(time2Seconds(eval(twoMileTSR[w].ExtraTime))))))
                 setDay3Extra(twoMileTSR[w].ExtraM)
                 setDay3Extra3(`Daily Mileage: ${mileage}`)
             } 
@@ -2215,12 +2211,12 @@ export default function Calendar() {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.1 * rndInt)
                 mileage -= 1
                 setDay2(`${mileage} miles easy + `);
-                setDay2Type(twoMileESS[w].Type + (twoMileESS[w].TypeMult * time2Seconds(eval(twoMileESS[w].TypeTime))))
+                setDay2Type(twoMileESS[w].Type + Math.floor(twoMileESS[w].TypeMult * time2Seconds(eval(twoMileESS[w].TypeTime))))
                 console.log("Something weird here: " + eval(twoMileESS[w].ExtraTime))
                 if (w <= 1)
                     setDay2Extra("")
                 else
-                    setDay2Extra(twoMileESS[w].Extra + (twoMileESS[w].ExtraMult * time2Seconds(eval(twoMileESS[w].ExtraTime))))
+                    setDay2Extra(twoMileESS[w].Extra + Math.floor(twoMileESS[w].ExtraMult * time2Seconds(eval(twoMileESS[w].ExtraTime))))
             }
             else if (i == 13) {
                 let mileage = Math.ceil(parseInt(data.mileage, 10) * 0.22 * rndInt)
@@ -2230,10 +2226,11 @@ export default function Calendar() {
         }
     });
   }
-  
+  //Commented out for web testing
+  ScreenOrientation.unlockAsync();
     return (
-        <View>
-        <View style={styles.row}>
+        <View style={styles.main}>
+        <ScrollView style={styles.row} horizontal={true}>
             <View style={styles.container}>
                 <TextInput 
                 placeholder='Day 1:'
@@ -2256,7 +2253,6 @@ export default function Calendar() {
                 onChangeText={(extra) => {setDay1Extra(extra)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day1ExtraM} 
                 onChangeText={(extraM) => {setDay1ExtraM(extraM)}}
@@ -2285,7 +2281,6 @@ export default function Calendar() {
                 onChangeText={(extra) => {setDay2Extra(extra)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day2ExtraM} 
                 onChangeText={(extraM) => {setDay2ExtraM(extraM)}}
@@ -2319,7 +2314,6 @@ export default function Calendar() {
                 onChangeText={(extraM) => {setDay3ExtraM(extraM)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day3Extra3} 
                 onChangeText={(extra3) => {setDay3Extra3(extra3)}}
@@ -2348,7 +2342,6 @@ export default function Calendar() {
                 onChangeText={(extra) => {setDay4Extra(extra)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day4ExtraM} 
                 onChangeText={(extraM) => {setDay4ExtraM(extraM)}}
@@ -2377,7 +2370,6 @@ export default function Calendar() {
                 onChangeText={(extra) => {setDay5Extra(extra)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day5ExtraM} 
                 onChangeText={(extraM) => {setDay5ExtraM(extraM)}}
@@ -2411,7 +2403,6 @@ export default function Calendar() {
                 onChangeText={(extraM) => {setDay6ExtraM(extraM)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day6Extra3} 
                 onChangeText={(extra3) => {setDay6Extra3(extra3)}}
@@ -2440,14 +2431,13 @@ export default function Calendar() {
                 onChangeText={(extra) => {setDay7Extra(extra)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day7ExtraM} 
                 onChangeText={(extraM) => {setDay7ExtraM(extraM)}}
                 />
             </View>
-        </View>
-        <View style={styles.row}>
+        </ScrollView>
+        <ScrollView style={styles.row} horizontal={true}>
             
             <View style={styles.container}>
                 <TextInput 
@@ -2471,7 +2461,6 @@ export default function Calendar() {
                 onChangeText={(extra) => {setDay8Extra(extra)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day8ExtraM} 
                 onChangeText={(extraM) => {setDay8ExtraM(extraM)}}
@@ -2500,7 +2489,6 @@ export default function Calendar() {
                 onChangeText={(extra) => {setDay9Extra(extra)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day9ExtraM} 
                 onChangeText={(extraM) => {setDay9ExtraM(extraM)}}
@@ -2534,7 +2522,6 @@ export default function Calendar() {
                 onChangeText={(extraM) => {setDay10ExtraM(extraM)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day10Extra3} 
                 onChangeText={(extra3) => {setDay10Extra3(extra3)}}
@@ -2563,7 +2550,6 @@ export default function Calendar() {
                 onChangeText={(extra) => {setDay11Extra(extra)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day11ExtraM} 
                 onChangeText={(extraM) => {setDay11ExtraM(extraM)}}
@@ -2597,7 +2583,6 @@ export default function Calendar() {
                 onChangeText={(extraM) => {setDay12ExtraM(extraM)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day12Extra3} 
                 onChangeText={(extra3) => {setDay12Extra3(extra3)}}
@@ -2631,7 +2616,6 @@ export default function Calendar() {
                 onChangeText={(extraM) => {setDay13ExtraM(extraM)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day13Extra3} 
                 onChangeText={(extra3) => {setDay13Extra3(extra3)}}
@@ -2665,22 +2649,24 @@ export default function Calendar() {
                 onChangeText={(extraM) => {setDay14ExtraM(extraM)}}
                 />
                 <TextInput 
-                style={styles.inputWrap}
                 placeholder=''
                 value={day14Extra3} 
                 onChangeText={(extra3) => {setDay14Extra3(extra3)}}
                 />
             </View>
             
-        </View>
+        </ScrollView>
         <Button title="Show Data" buttonStyle={styles.control} onPress={readData} />
     </View>
     );
+    
 }
 
 const styles = StyleSheet.create({
   row: {
         flexDirection: "row",
+        width: '98%',
+        paddingBottom: 15
   },
   inputWrap: {
         flex: 1,
@@ -2693,10 +2679,13 @@ const styles = StyleSheet.create({
   container: {  
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center', 
+    width: 125,
+    height: 130,
+    borderWidth: 0.5
   },
   textBoxes: {
-    width: '90%', 
+    width: '100%', 
     fontSize: 18,
      padding: 12,
       borderColor: 'gray', 
@@ -2717,5 +2706,8 @@ const styles = StyleSheet.create({
     padding: 10,
     color: '#fff',
     backgroundColor: '#D54826FF',
+  },
+  main: {
+    paddingTop: 20
   }
 });

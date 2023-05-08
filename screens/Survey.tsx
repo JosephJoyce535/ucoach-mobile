@@ -7,9 +7,10 @@ import { db } from '../config/firebase';
 import { Button } from 'react-native-elements';
 import { useAuthentication } from '../utils/hooks/useAuthentication';
 import RadioGroup, {RadioButtonProps} from 'react-native-radio-buttons-group';
-
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default function App({navigation}) {
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
   const { user } = useAuthentication(); 
   let gEvent = ""
   const [goalEvent, setGoalEvent] = useState('');
@@ -89,7 +90,7 @@ export default function App({navigation}) {
 
   function createData() {
     console.log("Goal Event:" + goalEvent)
-    console.log("Athlete Type:" + athleteType)
+    //console.log("Athlete Type:" + athleteType)
     const username = user?.email.split('@')[0];
     console.log(username);
     let athleteType = "";
@@ -160,13 +161,16 @@ export default function App({navigation}) {
       distance3: distance3,
       distance4: distance4,
       goalDate: goalDate,
-    }).then(() => {
+    })
+    /*
+    .then(() => {
       // Data saved successfully!
-      alert('data updated!');    
+      //alert('data updated!');    
     }).catch((error) => {
       // The write failed...
       alert(error);
     });
+    */
   }
 
   function update () {

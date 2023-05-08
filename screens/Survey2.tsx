@@ -7,9 +7,10 @@ import { db } from '../config/firebase';
 import { Button } from 'react-native-elements';
 import { useAuthentication } from '../utils/hooks/useAuthentication';
 import RadioGroup, {RadioButtonProps} from 'react-native-radio-buttons-group';
-
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default function App({navigation}) {
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
   const { user } = useAuthentication(); 
   const [email, setEmail] = useState('');
   const [trainingDistance1, setDistance1] = useState('');

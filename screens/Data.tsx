@@ -6,10 +6,12 @@ import { db } from '../config/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { useAuthentication } from '../utils/hooks/useAuthentication';
 import { useState, useEffect } from 'react';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const auth = getAuth();
 
 export default function Data() {
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
   const { user } = useAuthentication();  
   const [athleteType, setAthleteType] = useState('');
   const [goalEvent, setGoalEvent] = useState('');

@@ -2,8 +2,10 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { Button } from 'react-native-elements';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const WelcomeScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
   return (
     <View style={styles.container}>
       <Text>Welcome screen!</Text>

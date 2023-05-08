@@ -18,7 +18,7 @@ export default function UserStack() {
         <Stack.Screen name="Survey" component={Survey} />
         <Stack.Screen name="Data" component={Data} />
         <Stack.Screen name="Survey2" component={Survey2} />
-        <Stack.Screen name="Calendar" component={Calendar} />
+        <Stack.Screen name="Calendar" component={Calendar} options={{orientation: 'landscape'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
